@@ -2,13 +2,6 @@ import * as types from './types'
 
 const API_KEY = 'd45a7c14c88f48f5937a8fc3254378ad';
 
-export const showMarkerInfo = (marker) => {
-  return {
-    type: types.SHOW_MARKER_INFO,
-    marker
-  }
-}
-
 export const hideMarkerInfo = () => {
   return {
     type: types.HIDE_MARKER_INFO
@@ -64,6 +57,40 @@ export const closeBasestationSocket = () => {
       })
     }
 }
+
+export const showMarkerInfo = (marker) => {
+    return function (dispatch) {
+        let headers = new Headers();
+
+        let init = { method: 'GET',
+            headers: headers,
+            cache: 'default' };
+
+        fetch(new Request('http://basewatch.herokuapp.com/basestation/' + marker.base.id, init))
+            .then(response => {
+                if(response.ok){
+                    return response.json()
+                } else {
+                    // TODO: Add error handling
+                    dispatch(fetchedFoldersFailed(response))
+                }
+            })
+            .then(json => {
+                dispatch(fetchedMarkerInfo(json.body))
+            })
+            .catch(error => {
+                dispatch(fetchedFoldersFailed(error))
+            })
+    }
+}
+
+export const fetchedMarkerInfo = (basestation) => {
+    return {
+        type: types.SHOW_MARKER_INFO,
+        basestation
+    }
+}
+
 
 export const attachSensorToBase = (baseId, sensorId) => {
   return function(dispatch){

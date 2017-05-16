@@ -68,7 +68,10 @@ export const sensors = (state = {markers: []}, action) => {
         return Object.assign({}, state, {showRegisterSensor: false})
     case types.SHOW_MARKER_INFO:
         let markers = state.markers.map(marker => {
-          marker.showInfo = marker === action.marker ? true : false
+          if (marker.base.id === action.basestation.id) {
+              marker.showInfo = marker.base.id === action.basestation.id
+              marker.base.sensors = action.basestation.sensors
+          }
           return marker
         })
         return Object.assign({}, state, {markers: markers})

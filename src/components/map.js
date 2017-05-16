@@ -27,9 +27,22 @@ const BaseMap = withGoogleMap(props => (
               <div style={{height: 400, width: 300, backgroundColor: '#fff', opacity: '1'}}>
                 <strong>{marker.key}</strong>
                 <br />
-                {marker.base.sensors && marker.base.sensors.map(sensor => {
-                  return <span>sensor.name</span>
-                })}
+                {marker.base.sensors && (
+                    <table>
+                        <tbody>
+                        {marker.base.sensors.map((sensor, i) => {
+                            return <tr key={i}>
+                                <td>{sensor.type}</td>
+                                <td>{sensor.name}</td>
+                                <td>{sensor.lastUpdated}</td>
+                                <td>{sensor.sensorProperties.batteryPercentage} %</td>
+                                <td>{sensor.sensorProperties.signalStrength}</td>
+                                <td>{sensor.sensorProperties.temperature}</td>
+                            </tr>
+                        })}
+                        </tbody>
+                    </table>
+                )}
                 <div onClick={() => props.showRegisterSensor(marker.base)}>Attach Sensors</div>
               </div>
             </InfoWindow>
