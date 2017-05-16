@@ -11,6 +11,20 @@ class RegisterSensor extends Component  {
    this.handleSubmit = this.handleSubmit.bind(this);
  }
 
+ componentDidMount(){
+   console.log('mount');
+    this.connection = new WebSocket('wss://basewatch.herokuapp.com/registersensor/ws');
+    this.connection.onmessage = event => {
+      console.log('got data' + event.data);
+    }
+ }
+
+ componentWillUnmount(){
+   console.log('unmount');
+   this.connection.close();
+//    this.connection = new WebSocket('wss://basewatch.herokuapp.com/registersensor/ws');
+ }
+
  handleChange(event) {
    console.log('RegisterSensor::handleChange');
 //   this.setState({name: event.target.value});
@@ -28,7 +42,7 @@ class RegisterSensor extends Component  {
         <div style={{ position: 'relative', zIndex: 10, width: '450', height: '350', padding: 10, fontWeight: 'bold', backgroundColor: '#fff'}}>
           <div style={{float:'right'}} onClick={() => this.props.onCloseClick()}>X</div>
           <form onSubmit={this.handleSubmit}>
-              Attach sensors to basestation this.props.base.name <br/><br/>
+              Attach sensors to basestation {this.props.base.name} <br/><br/>
               <br/><br/>
               Incoming....
               <div style={{position: 'absolute', bottom: 10, right: 10, float: 'right'}}>

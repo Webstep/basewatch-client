@@ -4,7 +4,7 @@ import {
   GoogleMap,
   Marker,
   InfoWindow
-} from 'react-google-maps';
+} from 'react-google-maps'
 
 const BaseMap = withGoogleMap(props => (
   <GoogleMap
@@ -32,7 +32,11 @@ const BaseMap = withGoogleMap(props => (
                         <tbody>
                         {marker.base.sensors.map((sensor, i) => {
                             return <tr key={i}>
-                                <td>{sensor.type}</td>
+                                <td>
+                                  {sensor.type == 'PROXIMITY' && <i className="material-icons">compare_arrows</i>}
+                                  {sensor.type == 'TOUCH' && <i className="material-icons">layers</i>}
+                                  {sensor.type == 'TEMPERATURE' && <i className="material-icons">whatshot</i>}
+                                </td>
                                 <td>{sensor.name}</td>
                                 <td>{sensor.lastUpdated}</td>
                                 <td>{sensor.sensorProperties.batteryPercentage} %</td>
