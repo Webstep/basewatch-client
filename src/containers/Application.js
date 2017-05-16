@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import RegisterForm from '../components/registerForm'
+import RegisterBase from '../components/registerBase'
+import RegisterSensor from '../components/registerSensor'
 import Map from '../components/map'
 import Install from '../containers/install'
 import * as actions from '../actions/sensors'
@@ -21,19 +22,26 @@ class Application extends Component {
   render() {
     return (
       <div style={{height:'100%', width:'100%'}}>
-      {this.props.state.showRegisterForm &&
-        <RegisterForm
-          onCloseClick={this.props.hideRegisterForm}
+      {this.props.state.showRegisterBase &&
+        <RegisterBase
+          onCloseClick={this.props.hideRegisterBase}
           onSubmit={this.props.registerFolder}
           location={this.props.state.mapClickLocation}
-          position={this.props.state.registerFormPosition}/>
+          position={this.props.state.modalPosition}/>
+      }
+      {this.props.state.showRegisterSensor &&
+        <RegisterSensor
+          onCloseClick={this.props.hideRegisterSensor}
+          onSubmit={this.props.attachSensorToBase}
+          base={this.props.state.currentBase}/>
       }
         {this.props.state && this.props.state.position &&
           <Map
             centerPos={{lat: this.props.state.position.coords.latitude, lng: this.props.state.position.coords.longitude }}
             markers={this.props.state.markers}
             onMarkerClick={this.props.showMarkerInfo}
-            onMapClick={this.props.showRegisterForm}
+            onMapClick={this.props.showRegisterBase}
+            showRegisterSensor={this.props.showRegisterSensor}
             />
         }
       </div>

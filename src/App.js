@@ -16,7 +16,6 @@ import {
 
 import {BrowserRouter, Route} from 'react-router-dom';
 
-import Locations from './containers/Locations'
 import Application from './containers/Application'
 
 export default class App extends Component {

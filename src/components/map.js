@@ -27,11 +27,11 @@ const BaseMap = withGoogleMap(props => (
               <div style={{height: 400, width: 300, backgroundColor: '#fff', opacity: '1'}}>
                 <strong>{marker.key}</strong>
                 <br />
-                {marker.sensors && marker.sensors.map(sensor => {
+                {marker.base.sensors && marker.base.sensors.map(sensor => {
                   return <span>sensor.name</span>
                 })}
+                <div onClick={() => props.showRegisterSensor(marker.base)}>Attach Sensors</div>
               </div>
-              <div>OPEN WS</div>
             </InfoWindow>
           )}
         </Marker>
@@ -66,6 +66,7 @@ export default class Map extends Component {
           markers={this.props.markers}
           onMapClick={this.props.onMapClick}
           onMarkerClick={this.props.onMarkerClick}
+          showRegisterSensor={this.props.showRegisterSensor}
           onCloseClick={this.handleCloseClick}
 
           containerElement={

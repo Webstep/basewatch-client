@@ -9,10 +9,15 @@ export const showMarkerInfo = (marker) => {
   }
 }
 
-export const showRegisterForm = (event) => {
-      console.log('position is: lat: ' + event.latLng.lat() + ' long: ' + event.latLng.lng())
+export const hideMarkerInfo = () => {
+  return {
+    type: types.HIDE_MARKER_INFO
+  }
+}
+
+export const showRegisterBase = (event) => {
       return {
-        type: types.SHOW_REGISTER_FORM,
+        type: types.SHOW_REGISTER_BASE,
         pixel: {x: event.pixel.x, y: event.pixel.y},
         location: {
           latitude: event.latLng.lat(),
@@ -21,10 +26,80 @@ export const showRegisterForm = (event) => {
     }
 }
 
-export const hideRegisterForm = () => {
+export const hideRegisterBase = () => {
       return {
-        type: types.HIDE_REGISTER_FORM
+        type: types.HIDE_REGISTER_BASE
       }
+}
+
+export const showRegisterSensor = (base) => {
+    return function(dispatch){
+      dispatch(hideMarkerInfo());
+      dispatch({
+        type: types.SHOW_REGISTER_SENSOR,
+        base
+      })
+    }
+}
+
+export const hideRegisterSensor = () => {
+      return {
+        type: types.HIDE_REGISTER_SENSOR
+      }
+}
+
+export const openBasestationSocket = () => {
+  //wss://basewatch.herokuapp.com/registersensor/ws
+    return function(dispatch){
+      dispatch({
+        type: types.OPENING_WEBSOCKET
+      })
+    }
+}
+
+export const closeBasestationSocket = () => {
+    return function(dispatch){
+      dispatch({
+        type: types.CLOSING_WEBSOCKET
+      })
+    }
+}
+
+export const attachSensorToBase = (baseId, sensorId) => {
+  return function(dispatch){
+    let headers = new Headers();
+    let init = { method: 'PUT',
+    headers: headers,
+    cache: 'default' };
+
+   fetch(new Request('http://basewatch.herokuapp.com/basestations/' + baseId + '/sensor/' + sensorId, init)).then(
+      response => {
+        if(response.ok){
+          return response.json()
+        } else {
+          dispatch(attachSensorFailed(response))
+        }
+      }).then(
+        json =>{
+          dispatch(attachedSensor(json.body))
+      }).catch(error => {
+          dispatch(attachSensorFailed(error))
+      })
+  }
+}
+
+export const attachedSensor = (sensor) => {
+  return {
+    type: types.ATTACHED_SENSOR,
+    sensor
+  }
+}
+
+export const attachSensorFailed = (error) => {
+  return {
+    type: types.ATTACH_SENSOR_FAILED,
+    error
+  }
 }
 
 export const getCurrentPosition = () => {
@@ -50,7 +125,6 @@ export const fetchBaseStations = () => {
   return function(dispatch){
     dispatch(fetchingFolders())
     let headers = new Headers();
-//    headers.set('Authorization', 'ApiKey ' + API_KEY);
 
     let init = { method: 'GET',
     headers: headers,
@@ -78,10 +152,10 @@ export const fetchingFolders = () => {
   }
 }
 
-export const fetchedFolders = (folders) => {
+export const fetchedFolders = (basestations) => {
   return {
     type: types.FETCHED_FOLDERS,
-    folders
+    basestations
   }
 }
 
@@ -153,7 +227,7 @@ export const registerFolderFailed = (response) => {
 
 export const registeredFolder = (response) => {
     return function(dispatch){
-      dispatch(hideRegisterForm());
+      dispatch(hideRegisterBase());
       dispatch({
         type: types.REGISTER_FOLDER_DONE,
         response
