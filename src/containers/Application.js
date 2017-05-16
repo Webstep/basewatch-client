@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import Modal from '../components/modal'
+import RegisterForm from '../components/registerForm'
 import Map from '../components/map'
 import Install from '../containers/install'
 import * as actions from '../actions/sensors'
@@ -22,10 +22,11 @@ class Application extends Component {
     return (
       <div style={{height:'100%', width:'100%'}}>
       {this.props.state.showRegisterForm &&
-        <Modal
+        <RegisterForm
           onCloseClick={this.props.hideRegisterForm}
           onSubmit={this.props.registerFolder}
-          location={this.props.state.mapClickLocation}/>
+          location={this.props.state.mapClickLocation}
+          position={this.props.state.registerFormPosition}/>
       }
         {this.props.state && this.props.state.position &&
           <Map

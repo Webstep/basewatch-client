@@ -49,7 +49,7 @@ export const sensors = (state = {markers: []}, action) => {
     case types.REGISTER_BASE_STATION:
         return Object.assign({}, state, {})
     case types.SHOW_REGISTER_FORM:
-        return Object.assign({}, state, {showRegisterForm: true, mapClickLocation: action.location})
+        return Object.assign({}, state, {showRegisterForm: true, mapClickLocation: action.location, registerFormPosition: action.pixel})
     case types.HIDE_REGISTER_FORM:
         return Object.assign({}, state, {showRegisterForm: false})
     case types.SHOW_MARKER_INFO:

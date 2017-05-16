@@ -9,13 +9,14 @@ export const showMarkerInfo = (marker) => {
   }
 }
 
-export const showRegisterForm = (mapClickEvent) => {
-      console.log('position is: lat: ' + mapClickEvent.latLng.lat() + ' long: ' + mapClickEvent.latLng.lng())
+export const showRegisterForm = (event) => {
+      console.log('position is: lat: ' + event.latLng.lat() + ' long: ' + event.latLng.lng())
       return {
         type: types.SHOW_REGISTER_FORM,
+        pixel: {x: event.pixel.x, y: event.pixel.y},
         location: {
-          latitude: mapClickEvent.latLng.lat(),
-          longitude: mapClickEvent.latLng.lng()
+          latitude: event.latLng.lat(),
+          longitude: event.latLng.lng()
         }
     }
 }
