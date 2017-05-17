@@ -32,7 +32,8 @@ class Application extends Component {
       {this.props.state.showRegisterSensor &&
         <RegisterSensor
           onCloseClick={this.props.hideRegisterSensor}
-          onSubmit={this.props.attachSensorToBase}
+          attachSensor={this.props.attachSensorToBase}
+          fetchSensors={this.props.fetchSensors}
           base={this.props.state.currentBase}/>
       }
         {this.props.state && this.props.state.position &&

@@ -13,7 +13,7 @@ export const sensors = (state = {markers: []}, action) => {
     case types.CURRENT_POSITION:
       return Object.assign({}, state, {position: action.pos})
     case types.FETCHING_THINGS:
-      return Object.assign({}, state, {fetchingThings: true})
+      return Object.assign({}, state, {fetchingSensors: true})
     case types.FETCHED_THINGS:
       let thingsWithLocation = action.things.reduce((acc, thing) => {
         if(thing.location){
@@ -32,7 +32,7 @@ export const sensors = (state = {markers: []}, action) => {
       }, [])
       return Object.assign({}, state, {markers: thingsWithLocation})
     case types.FETCH_THINGS_FAILED:
-        return Object.assign({}, state, {fetchingThingsError: action.error})
+        return Object.assign({}, state, {fetchingSensorsError: action.error})
     case types.FETCHING_FOLDERS:
       return Object.assign({}, state, {fetchingFolders: true})
     case types.FETCHED_FOLDERS:
@@ -75,7 +75,7 @@ export const sensors = (state = {markers: []}, action) => {
           return marker
         })
         return Object.assign({}, state, {markers: markers})
-    case types.HIDE_MARKER_INFO:    
+    case types.HIDE_MARKER_INFO:
         return Object.assign({}, state, {markers: state.markers.map(marker => {
           marker.showInfo = false
           return marker

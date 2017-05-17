@@ -93,13 +93,14 @@ export const fetchedMarkerInfo = (basestation) => {
 
 
 export const attachSensorToBase = (baseId, sensorId) => {
+  console.log('attachSensorToBase base: ' + baseId + '  sensorId: ' + sensorId);
   return function(dispatch){
     let headers = new Headers();
     let init = { method: 'PUT',
     headers: headers,
     cache: 'default' };
 
-   fetch(new Request('http://basewatch.herokuapp.com/basestations/' + baseId + '/sensor/' + sensorId, init)).then(
+   fetch(new Request('http://basewatch.herokuapp.com/basestation/' + baseId + '/sensor/' + sensorId, init)).then(
       response => {
         if(response.ok){
           return response.json()
@@ -193,48 +194,47 @@ export const fetchedFoldersFailed = (error) => {
   }
 }
 
-export const fetchThings = () => {
+export const fetchSensors = () => {
   return function(dispatch){
-    dispatch(fetchingThings())
+    dispatch(fetchingSensors())
     let headers = new Headers();
-    headers.set('Authorization', 'ApiKey ' + API_KEY);
 
     let init = { method: 'GET',
     headers: headers,
     cache: 'default' };
 
-   fetch(new Request('https://api.disruptive-technologies.com/v1/things', init)).then(
+   fetch(new Request('https://basewatch.herokuapp.com/sensors', init)).then(
       response => {
         if(response.ok){
           return response.json()
         } else {
-          dispatch(fetchedThingsFailed(response))
+          dispatch(fetchedSensorsFailed(response))
         }
       }).then(
         json =>{
-          dispatch(fetchedThings(json.things))
+          dispatch(fetchedSensors(json.things))
       }).catch(error => {
-          dispatch(fetchedThingsFailed(error))
+          dispatch(fetchedSensorsFailed(error))
       })
   }
 }
 
-export const fetchingThings = () => {
+export const fetchingSensors = () => {
   return {
-    type: types.FETCHING_THINGS
+    type: types.FETCHING_SENSORS
   }
 }
 
-export const fetchedThings = (things) => {
+export const fetchedSensors = (things) => {
   return {
-    type: types.FETCHED_THINGS,
+    type: types.FETCHED_SENSORS,
     things
   }
 }
 
-export const fetchedThingsFailed = (error) => {
+export const fetchedSensorsFailed = (error) => {
   return {
-    type: types.FETCHED_THINGS,
+    type: types.FETCHED_SENSORS,
     error
   }
 }
