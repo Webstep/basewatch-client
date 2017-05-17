@@ -9,14 +9,17 @@ export const hideMarkerInfo = () => {
 }
 
 export const showRegisterBase = (event) => {
-      return {
+  return function(dispatch){
+    dispatch(hideMarkerInfo());
+    dispatch({
         type: types.SHOW_REGISTER_BASE,
         pixel: {x: event.pixel.x, y: event.pixel.y},
         location: {
           latitude: event.latLng.lat(),
           longitude: event.latLng.lng()
         }
-    }
+    });
+  }
 }
 
 export const hideRegisterBase = () => {
@@ -27,7 +30,6 @@ export const hideRegisterBase = () => {
 
 export const showRegisterSensor = (base) => {
     return function(dispatch){
-      dispatch(hideMarkerInfo());
       dispatch({
         type: types.SHOW_REGISTER_SENSOR,
         base
@@ -60,6 +62,8 @@ export const closeBasestationSocket = () => {
 
 export const showMarkerInfo = (marker) => {
     return function (dispatch) {
+        dispatch(hideRegisterBase());
+        dispatch(hideRegisterSensor());
         let headers = new Headers();
 
         let init = { method: 'GET',
@@ -91,7 +95,6 @@ export const fetchedMarkerInfo = (basestation) => {
     }
 }
 
-
 export const attachSensorToBase = (baseId, sensorId) => {
   console.log('attachSensorToBase base: ' + baseId + '  sensorId: ' + sensorId);
   return function(dispatch){
@@ -109,16 +112,17 @@ export const attachSensorToBase = (baseId, sensorId) => {
         }
       }).then(
         json =>{
-          dispatch(attachedSensor(json.body))
+          dispatch(attachedSensor(baseId, json.body))
       }).catch(error => {
           dispatch(attachSensorFailed(error))
       })
   }
 }
 
-export const attachedSensor = (sensor) => {
+export const attachedSensor = (baseId, sensor) => {
   return {
     type: types.ATTACHED_SENSOR,
+    baseId,
     sensor
   }
 }

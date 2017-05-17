@@ -3,7 +3,6 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import RegisterBase from '../components/registerBase'
-import RegisterSensor from '../components/registerSensor'
 import Map from '../components/map'
 import Install from '../containers/install'
 import * as actions from '../actions/sensors'
@@ -29,13 +28,6 @@ class Application extends Component {
           location={this.props.state.mapClickLocation}
           position={this.props.state.modalPosition}/>
       }
-      {this.props.state.showRegisterSensor &&
-        <RegisterSensor
-          onCloseClick={this.props.hideRegisterSensor}
-          attachSensor={this.props.attachSensorToBase}
-          fetchSensors={this.props.fetchSensors}
-          base={this.props.state.currentBase}/>
-      }
         {this.props.state && this.props.state.position &&
           <Map
             centerPos={{lat: this.props.state.position.coords.latitude, lng: this.props.state.position.coords.longitude }}
@@ -43,6 +35,9 @@ class Application extends Component {
             onMarkerClick={this.props.showMarkerInfo}
             onMapClick={this.props.showRegisterBase}
             showRegisterSensor={this.props.showRegisterSensor}
+            showSensorFeed={this.props.state.showSensorFeed}
+            attachSensor={this.props.attachSensorToBase}
+            closeMarker={this.props.hideMarkerInfo}
             />
         }
       </div>

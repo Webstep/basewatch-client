@@ -5,6 +5,8 @@ import {
   Marker,
   InfoWindow
 } from 'react-google-maps'
+import RegisterSensor from '../components/registerSensor'
+import Button from 'muicss/lib/react/button';
 
 const BaseMap = withGoogleMap(props => (
   <GoogleMap
@@ -13,8 +15,6 @@ const BaseMap = withGoogleMap(props => (
     onClick={props.onMapClick}
     >
     {props.markers && props.markers.map((marker, index) => {
-      const onCloseClick = () => props.onCloseClick(marker);
-
       return (
         <Marker
           key={index}
@@ -23,13 +23,20 @@ const BaseMap = withGoogleMap(props => (
           onClick={() => props.onMarkerClick(marker)}
         >
           {marker.showInfo && (
-            <InfoWindow onCloseClick={onCloseClick} >
-              <div style={{height: 400, width: 300, backgroundColor: '#fff', opacity: '1'}}>
+            <InfoWindow onCloseClick={() => props.closeMarker()} >
+              <div key='info' style={{width: 400, backgroundColor: '#fff', opacity: '1'}}>
                 <strong>{marker.key}</strong>
                 <br />
                 {marker.base.sensors && (
+                  <div style={{height: 300, overflow: 'auto'}}>
                     <table>
-                        <tbody>
+                      <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Battery</th>
+                        <th>RSSI</th>
+                        <th>State</th>
+                      </tr>
                         {marker.base.sensors.map((sensor, i) => {
                             return <tr key={i}>
                                 <td>
@@ -38,16 +45,25 @@ const BaseMap = withGoogleMap(props => (
                                   {sensor.type == 'TEMPERATURE' && <i className="material-icons">whatshot</i>}
                                 </td>
                                 <td>{sensor.name}</td>
-                                <td>{sensor.lastUpdated}</td>
                                 <td>{sensor.sensorProperties.batteryPercentage} %</td>
                                 <td>{sensor.sensorProperties.signalStrength}</td>
                                 <td>{sensor.sensorProperties.temperature}</td>
                             </tr>
                         })}
-                        </tbody>
                     </table>
+                  </div>
                 )}
-                <div onClick={() => props.showRegisterSensor(marker.base)}>Attach Sensors</div>
+                {!props.showSensorFeed &&
+                  <Button color='primary' onClick={() => props.showRegisterSensor()}>Attach Sensors</Button>
+                }
+                {props.showSensorFeed &&
+                  <div key='registerSensor' style={{overflow: 'auto', height: 200}}>
+                    <RegisterSensor
+                    attachSensor={props.attachSensor}
+                    base={marker.base}
+                    isActive={props.showInfo}/>
+                  </div>
+                }
               </div>
             </InfoWindow>
           )}
@@ -59,22 +75,6 @@ const BaseMap = withGoogleMap(props => (
 
 export default class Map extends Component {
 
-  handleCloseClick = this.handleCloseClick.bind(this);
-
- handleCloseClick(targetMarker) {
-   this.setState({
-     markers: this.props.markers.map(marker => {
-       if (marker === targetMarker) {
-         return {
-           ...marker,
-           showInfo: false,
-         };
-       }
-       return marker;
-     }),
-   });
- }
-
   render() {
     return (
       <div style={{height:'100%', width: '100%', float: 'left'}}>
@@ -84,8 +84,9 @@ export default class Map extends Component {
           onMapClick={this.props.onMapClick}
           onMarkerClick={this.props.onMarkerClick}
           showRegisterSensor={this.props.showRegisterSensor}
-          onCloseClick={this.handleCloseClick}
-
+          showSensorFeed={this.props.showSensorFeed}
+          attachSensor={this.props.attachSensor}
+          closeMarker={this.props.closeMarker}
           containerElement={
             <div style={{ height: `100%`}} />
           }

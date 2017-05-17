@@ -5,6 +5,7 @@
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
+    "muicss": "^0.9.16",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-google-maps": "^6.3.0",

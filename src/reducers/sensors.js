@@ -3,7 +3,13 @@ import * as types from '../actions/types'
 export const sensors = (state = {markers: []}, action) => {
   switch (action.type) {
     case types.ATTACHED_SENSOR:
-      return Object.assign({}, state, {})
+      let updatedMarkers = state.markers.map(marker => {
+        if(action.baseId === marker.base.id){
+          //marker.base.sensors.push(action.sensor);
+        }
+        return marker;
+      })
+      return Object.assign({}, state, {markers: updatedMarkers})
     case types.ATTACHED_SENSOR_FAILED:
       return Object.assign({}, state, {})
     case types.OPENING_WEBSOCKET:
@@ -63,13 +69,13 @@ export const sensors = (state = {markers: []}, action) => {
     case types.HIDE_REGISTER_BASE:
         return Object.assign({}, state, {showRegisterBase: false})
     case types.SHOW_REGISTER_SENSOR:
-        return Object.assign({}, state, {showRegisterSensor: true, currentBase: action.base})
+        return Object.assign({}, state, {showSensorFeed: true})
     case types.HIDE_REGISTER_SENSOR:
-        return Object.assign({}, state, {showRegisterSensor: false})
+        return Object.assign({}, state, {showSensorFeed: false})
     case types.SHOW_MARKER_INFO:
         let markers = state.markers.map(marker => {
+          marker.showInfo = marker.base.id === action.basestation.id
           if (marker.base.id === action.basestation.id) {
-              marker.showInfo = marker.base.id === action.basestation.id
               marker.base.sensors = action.basestation.sensors
           }
           return marker
