@@ -44,24 +44,13 @@ export const sensors = (state = {markers: []}, action) => {
     case types.FETCHED_FOLDERS:
       let baseStations = action.basestations.reduce((acc, base) => {
         if(base.location){
-          acc.push({
-            position: {
-              lat: base.location.latitude,
-              lng: base.location.longitude,
-            },
-            showInfo: false,
-            key: base.name,
-            defaultAnimation: 2,
-            base: {
-              id: base.id,
-              sensors: base.sensors,
-              name: base.name
-            }
-          })
+          acc.push(constructBasestation(base))
         }
         return acc
       }, [])
       return Object.assign({}, state, {markers: baseStations})
+    case types.REGISTER_FOLDER_DONE:
+        return Object.assign({}, state, {markers: state.markers.concat(constructBasestation(action.base))})
     case types.FETCH_FOLDERS_FAILED:
         return Object.assign({}, state, {fetchingFoldersError: action.error})
     case types.SHOW_REGISTER_BASE:
@@ -92,3 +81,20 @@ export const sensors = (state = {markers: []}, action) => {
 }
 
 export default sensors;
+
+const constructBasestation = (base) => {
+  return {
+    position: {
+      lat: base.location.latitude,
+      lng: base.location.longitude,
+    },
+    showInfo: false,
+    key: base.name,
+    defaultAnimation: 2,
+    base: {
+      id: base.id,
+      sensors: base.sensors,
+      name: base.name
+    }
+  }
+}

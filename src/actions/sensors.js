@@ -255,12 +255,12 @@ export const registerFolderFailed = (response) => {
   }
 }
 
-export const registeredFolder = (response) => {
+export const registeredFolder = (base) => {
     return function(dispatch){
       dispatch(hideRegisterBase());
       dispatch({
         type: types.REGISTER_FOLDER_DONE,
-        response
+        base
       })
     }
 }
@@ -269,19 +269,24 @@ export const registerFolder = (formData) => {
   return function(dispatch){
     dispatch(registeringFolder())
     let headers = new Headers();
-//    headers.set('Authorization', 'ApiKey ' + API_KEY);
-    //headers.set('Content-Type', 'application/json');
+    headers.set('X-Requested-With', 'XMLHttpRequest');
+    headers.set('X-CSRF-TOKEN', 'nocheck');
+    headers.set('Content-Type', 'application/json');
+    /*
+    */
+    //
     let latitude = formData.location.latitude + "";
     let longitude = formData.location.longitude + "";
 
     let body = JSON.stringify({
       name: formData.name,
       location: {
-        latitude: latitude.substr(0, 9),
-        longitude: longitude.substr(0, 9)
+        latitude: formData.location.latitude,
+        longitude: formData.location.longitude
       }
     });
     let init = { method: 'POST',
+    credentials: 'same-origin',
     headers: headers,
     body: body,
     cache: 'default' };
