@@ -12,6 +12,8 @@ class Basestation extends Component {
    super(props);
 
    this.state = {sensors: this.getSensorsInBase(props.base.sensors)};
+
+   this.onEventMessage = this.onEventMessage.bind(this);
  }
 
  getSensorsInBase(sensors){
@@ -33,7 +35,7 @@ class Basestation extends Component {
        return sensor.sensorProperties.objectPresent ? 'closed' : 'open';
        break;
      case 'TOUCH':
-       return '-';
+       return sensor.sensorProperties && sensor.sensorProperties.touch ? 'pressed' : '';
        break;
      default:
 
@@ -92,6 +94,16 @@ class Basestation extends Component {
  }
 
  onEventMessage(event){
+   let result = JSON.parse(event.data).result;
+   let sensors = Object.assign({}, this.state.sensors);
+   if(Object.keys(sensors).some(key => {
+     if(result.thing_id === key){
+       sensors[key].state = this.getSensorState({type: sensors[key].type, sensorProperties: result.state_changed})
+       return true;
+     }
+   })){
+     this.setState(Object.assign({}, this.state, {sensors: sensors}))
+   }
   //  let sensors = Object.assign({}, state.sensors);
   //  sensors[event.data]
    console.log('on message: ' + event)
