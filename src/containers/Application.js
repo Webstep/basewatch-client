@@ -32,7 +32,7 @@ class Application extends Component {
           <Map
             centerPos={{lat: this.props.state.position.coords.latitude, lng: this.props.state.position.coords.longitude }}
             markers={this.props.state.markers}
-            onMarkerClick={this.props.showMarkerInfo}
+            onMarkerClick={this.props.fetchBasestationData}
             onMapClick={this.props.showRegisterBase}
             showRegisterSensor={this.props.showRegisterSensor}
             showSensorFeed={this.props.state.showSensorFeed}

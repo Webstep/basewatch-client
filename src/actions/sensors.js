@@ -59,7 +59,7 @@ export const closeBasestationSocket = () => {
     }
 }
 
-export const showMarkerInfo = (marker) => {
+export const fetchBasestationData = (marker) => {
     return function (dispatch) {
         dispatch(hideRegisterBase());
         dispatch(hideRegisterSensor());
@@ -74,12 +74,11 @@ export const showMarkerInfo = (marker) => {
                 if(response.ok){
                     return response.json()
                 } else {
-                    // TODO: Add error handling
                     dispatch(fetchedFoldersFailed(response))
                 }
             })
             .then(json => {
-                dispatch(fetchedMarkerInfo(json.body))
+                dispatch(fetchedMarkerInfo(json.body, marker.base.showRegisterSensor))
             })
             .catch(error => {
                 dispatch(fetchedFoldersFailed(error))
@@ -87,10 +86,11 @@ export const showMarkerInfo = (marker) => {
     }
 }
 
-export const fetchedMarkerInfo = (basestation) => {
+export const fetchedMarkerInfo = (basestation, showRegisterSensor) => {
     return {
         type: types.SHOW_MARKER_INFO,
-        basestation
+        basestation,
+        showRegisterSensor
     }
 }
 
@@ -119,10 +119,13 @@ export const attachSensorToBase = (baseId, sensorId) => {
 }
 
 export const attachedSensor = (baseId, sensor) => {
-  return {
-    type: types.ATTACHED_SENSOR,
-    baseId,
-    sensor
+  return function(dispatch){
+    dispatch({
+      type: types.ATTACHED_SENSOR,
+      baseId,
+      sensor
+    })
+    dispatch(fetchBasestationData({base:{id: baseId, showRegisterSensor: true}}))
   }
 }
 

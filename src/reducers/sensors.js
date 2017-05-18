@@ -69,7 +69,7 @@ export const sensors = (state = {markers: []}, action) => {
           }
           return marker
         })
-        return Object.assign({}, state, {markers: markers})
+        return Object.assign({}, state, {markers: markers, showSensorFeed: action.showRegisterSensor ? true : false})
     case types.HIDE_MARKER_INFO:
         return Object.assign({}, state, {markers: state.markers.map(marker => {
           marker.showInfo = false

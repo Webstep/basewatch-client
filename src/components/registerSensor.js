@@ -17,16 +17,13 @@ class RegisterSensor extends Component  {
    let that = this;
    this.connection = new WebSocket('wss://basewatch.herokuapp.com/registersensor/ws');
    this.connection.onmessage = event => {
-     console.log('got one ', event);
      let data = JSON.parse(event.data);
-      if(!that.state.sensorMap.hasOwnProperty(data.sensorId)){
+      if(!that.state.sensorMap.hasOwnProperty(data.sensorId) && !that.baseStationHasSensor(data.sensorId)){
+        console.log('unseen ', event);
         let map = Object.assign({}, that.state.sensorMap);
         map[data.sensorId] = []
         that.setState(Object.assign({}, that.state, {sensorMap: map}));
       }
-      console.log(Object.keys(that.state.sensorMap));
-      console.log("Response: ", event.data);
-
     };
    this.connection.onerror = function (e) {
       console.log("An error occurred: ", e);
@@ -35,6 +32,13 @@ class RegisterSensor extends Component  {
 
  componentWillUnmount(){
    this.connection.close();
+ }
+
+ baseStationHasSensor(id){
+   return this.state.base.sensors.some(sensor => {
+     if(sensor.id === id) return true;
+   })
+   console.log('baseStationHasSensor ' + id);
  }
 
   render() {
@@ -46,7 +50,7 @@ class RegisterSensor extends Component  {
               <br/><br/>
               <ul style={{listStyle: 'none', paddingLeft:0}}>
               {Object.keys(this.state.sensorMap).map(key => {
-                return <li><Button color='primary' onClick={() => this.props.attachSensor(this.state.base.id, key)}>Add sensor {key}</Button></li>
+                return <li key={key}><Button color='primary' onClick={() => this.props.attachSensor(this.state.base.id, key)}>Add sensor {key}</Button></li>
               })
               }
               </ul>
