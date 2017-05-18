@@ -25,12 +25,12 @@ const BaseMap = withGoogleMap(props => (
         >
           {marker.showInfo && (
             <InfoWindow style={{backgroundColor: '#efefef'}} onCloseClick={() => props.closeMarker()} >
-              <div key='info' style={{width: 400, opacity: '1'}}>
+              <div key='info' style={{opacity: '1',overflow: 'auto', width: 400, height:400}}>
               <h3>Basestation {marker.key}</h3>
               <Divider />
                 <br />
                 {marker.base.sensors && (
-                  <div style={{height: 300, overflow: 'auto'}}>
+                  <div style={{paddingBottom:30}}>
                     <table style={{width: '100%'}}>
                       <tr>
                         <th>Type</th>
@@ -55,8 +55,9 @@ const BaseMap = withGoogleMap(props => (
                     </table>
                   </div>
                 )}
+                <Divider />
                 {!props.showSensorFeed &&
-                  <Button color='primary' onClick={() => props.showRegisterSensor()}>Attach Sensors</Button>
+                  <Button style={{position: 'absolute', bottom: 0, right:0}} color='primary' onClick={() => props.showRegisterSensor()}>Attach Sensors</Button>
                 }
                 {props.showSensorFeed &&
                   <div key='registerSensor' style={{overflow: 'auto', height: 200}}>
