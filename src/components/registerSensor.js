@@ -13,13 +13,11 @@ class RegisterSensor extends Component  {
  }
 
  componentDidMount(){
-   console.log('mount');
    let that = this;
    this.connection = new WebSocket('wss://basewatch.herokuapp.com/registersensor/ws');
    this.connection.onmessage = event => {
      let data = JSON.parse(event.data);
       if(!that.state.sensorMap.hasOwnProperty(data.sensorId) && !that.baseStationHasSensor(data.sensorId)){
-        console.log('unseen ', event);
         let map = Object.assign({}, that.state.sensorMap);
         map[data.sensorId] = []
         that.setState(Object.assign({}, that.state, {sensorMap: map}));
@@ -38,7 +36,6 @@ class RegisterSensor extends Component  {
    return this.state.base.sensors.some(sensor => {
      if(sensor.id === id) return true;
    })
-   console.log('baseStationHasSensor ' + id);
  }
 
   render() {

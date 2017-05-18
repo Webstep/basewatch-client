@@ -59,12 +59,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Application)
-
-/*
-        <BrowserRouter>
-          <Switch>
-            <Route path="/things" component={() => <Map markers={this.props.state.things} />} />
-            <Route path="/install" component={() => <Install/>} />
-          </Switch>
-        </BrowserRouter>
-*/

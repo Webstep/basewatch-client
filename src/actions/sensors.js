@@ -95,7 +95,6 @@ export const fetchedMarkerInfo = (basestation, showRegisterSensor) => {
 }
 
 export const attachSensorToBase = (baseId, sensorId) => {
-  console.log('attachSensorToBase base: ' + baseId + '  sensorId: ' + sensorId);
   return function(dispatch){
     let headers = new Headers();
     let init = { method: 'PUT',
