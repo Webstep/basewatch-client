@@ -7,6 +7,7 @@ import {
 } from 'react-google-maps'
 import RegisterSensor from '../components/registerSensor'
 import Button from 'muicss/lib/react/button';
+import Divider from 'muicss/lib/react/divider';
 
 const BaseMap = withGoogleMap(props => (
   <GoogleMap
@@ -23,13 +24,14 @@ const BaseMap = withGoogleMap(props => (
           onClick={() => props.onMarkerClick(marker)}
         >
           {marker.showInfo && (
-            <InfoWindow onCloseClick={() => props.closeMarker()} >
-              <div key='info' style={{width: 400, backgroundColor: '#fff', opacity: '1'}}>
-                <strong>{marker.key}</strong>
+            <InfoWindow style={{backgroundColor: '#efefef'}} onCloseClick={() => props.closeMarker()} >
+              <div key='info' style={{width: 400, opacity: '1'}}>
+              <h3>Basestation {marker.key}</h3>
+              <Divider />
                 <br />
                 {marker.base.sensors && (
                   <div style={{height: 300, overflow: 'auto'}}>
-                    <table>
+                    <table style={{width: '100%'}}>
                       <tr>
                         <th>Type</th>
                         <th>Name</th>

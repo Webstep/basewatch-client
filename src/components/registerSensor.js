@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Button from 'muicss/lib/react/button';
 import Container from 'muicss/lib/react/container';
+import Divider from 'muicss/lib/react/divider';
 
 class RegisterSensor extends Component  {
   constructor(props) {
@@ -39,6 +40,8 @@ class RegisterSensor extends Component  {
   render() {
     return (
       <Container fluid={true}>
+      <h3>Add Sensors</h3>
+      <Divider />
               Attach sensors to basestation {this.props.base.name} <br/><br/>
               <br/><br/>
               <ul style={{listStyle: 'none', paddingLeft:0}}>

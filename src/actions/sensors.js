@@ -44,7 +44,6 @@ export const hideRegisterSensor = () => {
 }
 
 export const openBasestationSocket = () => {
-  //wss://basewatch.herokuapp.com/registersensor/ws
     return function(dispatch){
       dispatch({
         type: types.OPENING_WEBSOCKET
@@ -70,7 +69,7 @@ export const showMarkerInfo = (marker) => {
             headers: headers,
             cache: 'default' };
 
-        fetch(new Request('http://basewatch.herokuapp.com/basestation/' + marker.base.id, init))
+        fetch(new Request('https://basewatch.herokuapp.com/basestation/' + marker.base.id, init))
             .then(response => {
                 if(response.ok){
                     return response.json()
@@ -103,7 +102,7 @@ export const attachSensorToBase = (baseId, sensorId) => {
     headers: headers,
     cache: 'default' };
 
-   fetch(new Request('http://basewatch.herokuapp.com/basestation/' + baseId + '/sensor/' + sensorId, init)).then(
+   fetch(new Request('https://basewatch.herokuapp.com/basestation/' + baseId + '/sensor/' + sensorId, init)).then(
       response => {
         if(response.ok){
           return response.json()
@@ -162,7 +161,7 @@ export const fetchBaseStations = () => {
     headers: headers,
     cache: 'default' };
 
-   fetch(new Request('http://basewatch.herokuapp.com/basestations', init)).then(
+   fetch(new Request('https://basewatch.herokuapp.com/basestations', init)).then(
       response => {
         if(response.ok){
           return response.json()
@@ -270,18 +269,24 @@ export const registerFolder = (formData) => {
   return function(dispatch){
     dispatch(registeringFolder())
     let headers = new Headers();
-    headers.set('Authorization', 'ApiKey ' + API_KEY);
-    headers.set('Content-Type', 'application/json');
+//    headers.set('Authorization', 'ApiKey ' + API_KEY);
+    //headers.set('Content-Type', 'application/json');
+    let latitude = formData.location.latitude + "";
+    let longitude = formData.location.longitude + "";
 
+    let body = JSON.stringify({
+      name: formData.name,
+      location: {
+        latitude: latitude.substr(0, 9),
+        longitude: longitude.substr(0, 9)
+      }
+    });
     let init = { method: 'POST',
     headers: headers,
-    body: JSON.stringify({
-      "parent_id" : "b48anrl847ng00d7bmpg",
-      "name": formData.name
-    }),
+    body: body,
     cache: 'default' };
 
-   fetch(new Request('https://api.disruptive-technologies.com/v1/folders', init)).then(
+   fetch(new Request('https://basewatch.herokuapp.com/basestation', init)).then(
       response => {
         if(response.ok){
           return response.json()
@@ -289,10 +294,8 @@ export const registerFolder = (formData) => {
           dispatch(registerFolderFailed(response))
         }
       }).then(
-        folder =>{
-          dispatch(registeredFolder(folder))
-          //since POST endpoint does not update description do an update to include location
-          dispatch(updateFolderLocation(folder.id, formData.location));
+        response =>{
+          dispatch(registeredFolder(response.body))
       }).catch(error => {
           dispatch(registerFolderFailed(error))
       })
